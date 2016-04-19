@@ -52,11 +52,15 @@ MongoClient.connect(mongoURL, function (err, database) {
 
   app.get("/:ID", function(req, res) {
     // Get URL back
-    var idNum = +req.params.ID;
-    database.collection("url").find({"id": idNum}).toArray()
-    .then(function (content) {
-      res.redirect(content[0].url);
-    });
+    if(isNaN(Number(req.params.ID))) {
+      res.json({"error": "This is not a valid entry"});
+    } else {
+      var idNum = +req.params.ID;
+      database.collection("url").find({"id": idNum}).toArray()
+      .then(function (content) {
+        res.redirect(content[0].url);
+      });
+    }
   });
 });
 
